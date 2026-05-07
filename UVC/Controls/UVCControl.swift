@@ -85,10 +85,15 @@ public class UVCControl {
                     throw UVCError.requestError
                 }
             } else {
-                guard
-                    interface.pointee.pointee.USBInterfaceOpenSeize(interface) == kIOReturnSuccess,
-                    interface.pointee.pointee.ControlRequest(interface, 0, &request) == kIOReturnSuccess,
-                    interface.pointee.pointee.USBInterfaceClose(interface) == kIOReturnSuccess else {
+                guard interface.pointee.pointee.USBInterfaceOpenSeize(interface) == kIOReturnSuccess else {
+                    throw UVCError.requestError
+                }
+
+                defer {
+                    _ = interface.pointee.pointee.USBInterfaceClose(interface)
+                }
+
+                guard interface.pointee.pointee.ControlRequest(interface, 0, &request) == kIOReturnSuccess else {
                     throw UVCError.requestError
                 }
             }

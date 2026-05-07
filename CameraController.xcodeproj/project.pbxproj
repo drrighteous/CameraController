@@ -18,16 +18,13 @@
 		F42460412A5A6C75009108C2 /* ApplicationSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42460402A5A6C75009108C2 /* ApplicationSection.swift */; };
 		F42460432A5A6CC0009108C2 /* CameraSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42460422A5A6CC0009108C2 /* CameraSection.swift */; };
 		F42460452A5A6D07009108C2 /* ReadWriteSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42460442A5A6D07009108C2 /* ReadWriteSection.swift */; };
-		F42460472A5A6D26009108C2 /* UpdatesSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42460462A5A6D26009108C2 /* UpdatesSection.swift */; };
 		F42460492A5A6D5E009108C2 /* QuitButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42460482A5A6D5E009108C2 /* QuitButton.swift */; };
 		F424604B2A5A77E6009108C2 /* ZoomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F424604A2A5A77E6009108C2 /* ZoomView.swift */; };
 		F424604D2A5A7969009108C2 /* RollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F424604C2A5A7969009108C2 /* RollView.swift */; };
 		F424604F2A5A79E6009108C2 /* PanTiltView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F424604E2A5A79E6009108C2 /* PanTiltView.swift */; };
 		F42D42D627A0E3D500107DFF /* StatusBarManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42D42D527A0E3D500107DFF /* StatusBarManager.swift */; };
 		F42D42D827A0E92100107DFF /* WindowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42D42D727A0E92100107DFF /* WindowManager.swift */; };
-		F42D42DB27A0F0C600107DFF /* MoveApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42D42DA27A0F0C600107DFF /* MoveApplication.swift */; };
 		F42D42DD27A0F0DC00107DFF /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F42D42DC27A0F0DB00107DFF /* Security.framework */; platformFilter = maccatalyst; };
-		F42D42DF27A0F0EE00107DFF /* MoveApplication.strings in Resources */ = {isa = PBXBuildFile; fileRef = F42D42DE27A0F0EE00107DFF /* MoveApplication.strings */; };
 		F42D42E227A0F68000107DFF /* NSNotificationName+Devices.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42D42E127A0F68000107DFF /* NSNotificationName+Devices.swift */; };
 		F44150732A882D760021ADB5 /* ProfileRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44150722A882D760021ADB5 /* ProfileRow.swift */; };
 		F4508AD22A43E477003C44F1 /* UVC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4508ACC2A43E477003C44F1 /* UVC.framework */; };
@@ -73,7 +70,6 @@
 		F47D07F424C412F800E44A22 /* DevicesManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47D07F324C412F800E44A22 /* DevicesManagerTests.swift */; };
 		F47D080A24C50E1C00E44A22 /* StringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47D080924C50E1C00E44A22 /* StringTests.swift */; };
 		F486353124CBA574003CE0BA /* NumberCaptureDeviceProperty.swift in Sources */ = {isa = PBXBuildFile; fileRef = F486353024CBA574003CE0BA /* NumberCaptureDeviceProperty.swift */; };
-		F49FA8252A43BE5D0043E0E1 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = F49FA8242A43BE5D0043E0E1 /* Sparkle */; };
 		F4D1713E2A3D4C770039E353 /* TabSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D1713D2A3D4C770039E353 /* TabSelectorView.swift */; };
 		F4D171402A3E95410039E353 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D1713F2A3E95410039E353 /* Constants.swift */; };
 		F4D171422A3E96C00039E353 /* Slider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D171412A3E96C00039E353 /* Slider.swift */; };
@@ -167,16 +163,13 @@
 		F42460402A5A6C75009108C2 /* ApplicationSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationSection.swift; sourceTree = "<group>"; };
 		F42460422A5A6CC0009108C2 /* CameraSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraSection.swift; sourceTree = "<group>"; };
 		F42460442A5A6D07009108C2 /* ReadWriteSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadWriteSection.swift; sourceTree = "<group>"; };
-		F42460462A5A6D26009108C2 /* UpdatesSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdatesSection.swift; sourceTree = "<group>"; };
 		F42460482A5A6D5E009108C2 /* QuitButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuitButton.swift; sourceTree = "<group>"; };
 		F424604A2A5A77E6009108C2 /* ZoomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomView.swift; sourceTree = "<group>"; };
 		F424604C2A5A7969009108C2 /* RollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RollView.swift; sourceTree = "<group>"; };
 		F424604E2A5A79E6009108C2 /* PanTiltView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanTiltView.swift; sourceTree = "<group>"; };
 		F42D42D527A0E3D500107DFF /* StatusBarManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarManager.swift; sourceTree = "<group>"; };
 		F42D42D727A0E92100107DFF /* WindowManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowManager.swift; sourceTree = "<group>"; };
-		F42D42DA27A0F0C600107DFF /* MoveApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveApplication.swift; sourceTree = "<group>"; };
 		F42D42DC27A0F0DB00107DFF /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
-		F42D42DE27A0F0EE00107DFF /* MoveApplication.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = MoveApplication.strings; sourceTree = "<group>"; };
 		F42D42E127A0F68000107DFF /* NSNotificationName+Devices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSNotificationName+Devices.swift"; sourceTree = "<group>"; };
 		F44150722A882D760021ADB5 /* ProfileRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileRow.swift; sourceTree = "<group>"; };
 		F4508AC52A43DE40003C44F1 /* UVCErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UVCErrors.swift; sourceTree = "<group>"; };
@@ -275,7 +268,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				F47D07F224C4125B00E44A22 /* AVFoundation.framework in Frameworks */,
-				F49FA8252A43BE5D0043E0E1 /* Sparkle in Frameworks */,
 				F4D4C6F524CBE81600581E05 /* ServiceManagement.framework in Frameworks */,
 				F42D42DD27A0F0DC00107DFF /* Security.framework in Frameworks */,
 				F4508AD22A43E477003C44F1 /* UVC.framework in Frameworks */,
@@ -300,15 +292,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		F42D42D927A0F0B200107DFF /* Vendored */ = {
-			isa = PBXGroup;
-			children = (
-				F42D42DA27A0F0C600107DFF /* MoveApplication.swift */,
-				F42D42DE27A0F0EE00107DFF /* MoveApplication.strings */,
-			);
-			path = Vendored;
-			sourceTree = "<group>";
-		};
 		F42D42E027A0F66D00107DFF /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -433,7 +416,6 @@
 				F47D07EC24C4118200E44A22 /* Devices */,
 				F47D07EB24C4117A00E44A22 /* Views */,
 				F47D07D024C4104600E44A22 /* Preview Content */,
-				F42D42D927A0F0B200107DFF /* Vendored */,
 			);
 			path = CameraController;
 			sourceTree = "<group>";
@@ -575,7 +557,6 @@
 				F42460422A5A6CC0009108C2 /* CameraSection.swift */,
 				F424603E2A5A6C14009108C2 /* PreviewSection.swift */,
 				F42460442A5A6D07009108C2 /* ReadWriteSection.swift */,
-				F42460462A5A6D26009108C2 /* UpdatesSection.swift */,
 				F42460482A5A6D5E009108C2 /* QuitButton.swift */,
 			);
 			path = Preferences;
@@ -700,7 +681,6 @@
 			);
 			name = CameraController;
 			packageProductDependencies = (
-				F49FA8242A43BE5D0043E0E1 /* Sparkle */,
 			);
 			productName = CameraController;
 			productReference = F47D07C424C4104300E44A22 /* CameraController.app */;
@@ -778,7 +758,6 @@
 			);
 			mainGroup = F47D07BB24C4104300E44A22;
 			packageReferences = (
-				F49FA8232A43BE5D0043E0E1 /* XCRemoteSwiftPackageReference "Sparkle" */,
 			);
 			productRefGroup = F47D07C524C4104300E44A22 /* Products */;
 			projectDirPath = "";
@@ -806,7 +785,6 @@
 			files = (
 				F47D07D524C4104600E44A22 /* Main.storyboard in Resources */,
 				F47D07D224C4104600E44A22 /* Preview Assets.xcassets in Resources */,
-				F42D42DF27A0F0EE00107DFF /* MoveApplication.strings in Resources */,
 				F47D07CF24C4104600E44A22 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -914,7 +892,6 @@
 				F46C25752A4937ED00FF9100 /* VisualEffectView.swift in Sources */,
 				F4D4C6CE24CBD34300581E05 /* AdvancedView.swift in Sources */,
 				F42460332A5A299B009108C2 /* GenericControl.swift in Sources */,
-				F42D42DB27A0F0C600107DFF /* MoveApplication.swift in Sources */,
 				F4E5263224C93A3400125DF9 /* DeviceController.swift in Sources */,
 				F42460492A5A6D5E009108C2 /* QuitButton.swift in Sources */,
 				F42460352A5A65A0009108C2 /* BrightnessView.swift in Sources */,
@@ -927,7 +904,6 @@
 				F424603D2A5A678C009108C2 /* HueView.swift in Sources */,
 				F46C25782A49386D00FF9100 /* UnsupportedView.swift in Sources */,
 				F4D4C6D624CBD96B00581E05 /* MultipleCaptureDeviceProperty.swift in Sources */,
-				F42460472A5A6D26009108C2 /* UpdatesSection.swift in Sources */,
 				F4D4C6D024CBD3B000581E05 /* PowerLineView.swift in Sources */,
 				F4D4C6D824CBDA5700581E05 /* FocusView.swift in Sources */,
 				F4E5262B24C7D97B00125DF9 /* ExposureView.swift in Sources */,
@@ -1411,24 +1387,6 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCRemoteSwiftPackageReference section */
-		F49FA8232A43BE5D0043E0E1 /* XCRemoteSwiftPackageReference "Sparkle" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/sparkle-project/Sparkle";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.0.0;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		F49FA8242A43BE5D0043E0E1 /* Sparkle */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = F49FA8232A43BE5D0043E0E1 /* XCRemoteSwiftPackageReference "Sparkle" */;
-			productName = Sparkle;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = F47D07BC24C4104300E44A22 /* Project object */;
 }

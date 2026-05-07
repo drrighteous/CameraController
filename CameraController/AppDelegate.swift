@@ -8,33 +8,22 @@
 
 import Cocoa
 import SwiftUI
-import Sparkle
 
 @NSApplicationMain
 final class AppDelegate: NSObject, NSApplicationDelegate {
 
     var statusBarManager: StatusBarManager = StatusBarManager()
 
-    private let updaterController = SPUStandardUpdaterController(
-        startingUpdater: true,
-        updaterDelegate: nil,
-        userDriverDelegate: nil
-    )
-
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        LetsMove.shared.moveToApplicationsFolderIfNecessary()
+        WindowManager.shared.showWindow()
+    }
 
-        if UserSettings.shared.checkForUpdatesOnStartup {
-            checkForUpdates()
-        }
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        WindowManager.shared.showWindow()
+        return true
     }
 
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
         return false
-    }
-
-    // MARK: - Check For Updates
-    func checkForUpdates() {
-        updaterController.checkForUpdates(nil)
     }
 }

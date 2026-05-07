@@ -50,12 +50,6 @@ final class UserSettings: ObservableObject {
         }
     }
 
-    @Published var checkForUpdatesOnStartup: Bool {
-        didSet {
-            UserDefaults.standard.set(checkForUpdatesOnStartup, forKey: "checkForUpdatesOnStartup")
-        }
-    }
-
     @Published var mirrorPreview: Bool {
         didSet {
             UserDefaults.standard.set(mirrorPreview, forKey: "mirrorPreview")
@@ -70,7 +64,6 @@ final class UserSettings: ObservableObject {
         cameraPreviewSize = PreviewSizeSettings(
             rawValue: UserDefaults.standard.double(forKey: "cameraPreviewSize")
         ) ?? .small
-        checkForUpdatesOnStartup = UserDefaults.standard.bool(forKey: "checkForUpdatesOnStartup")
         mirrorPreview = UserDefaults.standard.bool(forKey: "mirrorPreview")
     }
 }

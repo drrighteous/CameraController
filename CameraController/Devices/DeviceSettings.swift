@@ -16,6 +16,8 @@ struct DeviceSettings: Codable {
     let contrast: Float
     let saturation: Float
     let sharpness: Float
+    let hueAuto: Bool?
+    let hue: Float?
     let whiteBalanceAuto: Bool
     let whiteBalance: Float
     let powerline: Float
@@ -23,6 +25,7 @@ struct DeviceSettings: Codable {
     let zoom: Float
     let pan: Float
     let tilt: Float
+    let roll: Float?
     let focusAuto: Bool
     let focus: Float
 }

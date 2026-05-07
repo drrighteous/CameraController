@@ -11,4 +11,7 @@ import Foundation
 enum UVCError: Error {
     case requestError
     case invalidUnitId
+    case cameraNotFound
+    case missingUSBInterface
+    case missingConfigurationDescriptor
 }

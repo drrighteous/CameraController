@@ -26,9 +26,23 @@ extension AVCaptureDevice {
 
         var iter: io_iterator_t = 0
         if IOServiceGetMatchingServices(kIOMasterPortDefault, dictionary, &iter) == kIOReturnSuccess {
-            var cameraCandidate: io_service_t
-            cameraCandidate = IOIteratorNext(iter)
-            while cameraCandidate != 0 {
+            defer {
+                if iter != 0 {
+                    IOObjectRelease(iter)
+                }
+            }
+
+            while true {
+                let cameraCandidate = IOIteratorNext(iter)
+                guard cameraCandidate != 0 else { break }
+
+                var found = false
+                defer {
+                    if !found {
+                        IOObjectRelease(cameraCandidate)
+                    }
+                }
+
                 var propsRef: Unmanaged<CFMutableDictionary>?
 
                 if IORegistryEntryCreateCFProperties(
@@ -36,7 +50,6 @@ extension AVCaptureDevice {
                     &propsRef,
                     kCFAllocatorDefault,
                     0) == kIOReturnSuccess {
-                    var found: Bool = false
                     if let properties = propsRef?.takeRetainedValue() {
 
                         // uniqueID starts with hex version of locationID
@@ -53,13 +66,16 @@ extension AVCaptureDevice {
                         }
                     }
                 }
-                cameraCandidate = IOIteratorNext(iter)
             }
         }
 
         // if we haven't found a camera after looping through the iterator, fallback on GetMatchingService method
         if camera == 0 {
             camera = IOServiceGetMatchingService(kIOMasterPortDefault, dictionary)
+        }
+
+        guard camera != 0 else {
+            throw UVCError.cameraNotFound
         }
 
         return camera
@@ -99,11 +115,17 @@ extension AVCaptureDevice {
                 return
             }
         }
-        guard interfaceRef != nil else { throw NSError(domain: #function, code: #line, userInfo: nil) }
+        guard let interfaceRef else {
+            throw UVCError.missingUSBInterface
+        }
 
-        let descriptor = configDesc!.proccessDescriptor()
+        guard let configDesc else {
+            throw UVCError.missingConfigurationDescriptor
+        }
 
-        return USBDevice(interface: interfaceRef.unsafelyUnwrapped,
+        let descriptor = configDesc.proccessDescriptor()
+
+        return USBDevice(interface: interfaceRef,
                          descriptor: descriptor)
     }
 }

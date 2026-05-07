@@ -10,7 +10,7 @@ import Cocoa
 import SwiftUI
 
 enum HelperConstants {
-    static let BundleIdentifier = "com.itaysoft.CameraController"
+    static let bundleIdentifier = "com.itaysoft.CameraController"
 }
 
 @NSApplicationMain
@@ -18,15 +18,28 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         let runningApps = NSWorkspace.shared.runningApplications
         let isRunning = runningApps.contains {
-            $0.bundleIdentifier == HelperConstants.BundleIdentifier
+            $0.bundleIdentifier == HelperConstants.bundleIdentifier
         }
 
-        if !isRunning {
-            var path = Bundle.main.bundlePath as NSString
-            for _ in 1...4 {
-                path = path.deletingLastPathComponent as NSString
+        guard !isRunning else {
+            NSApp.terminate(nil)
+            return
+        }
+
+        var path = Bundle.main.bundlePath as NSString
+        for _ in 1...4 {
+            path = path.deletingLastPathComponent as NSString
+        }
+
+        let configuration = NSWorkspace.OpenConfiguration()
+        NSWorkspace.shared.openApplication(
+            at: URL(fileURLWithPath: path as String),
+            configuration: configuration
+        ) { _, error in
+            if let error {
+                NSLog("Unable to open CameraController from login helper: \(error.localizedDescription)")
             }
-            NSWorkspace.shared.launchApplication(path as String)
+            NSApp.terminate(nil)
         }
     }
 }

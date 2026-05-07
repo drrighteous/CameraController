@@ -12,29 +12,22 @@ import AVFoundation
 
 final class CameraPreviewInternal: NSView {
     var captureDevice: AVCaptureDevice?
-    private var captureSession: AVCaptureSession
-    private var previewLayer: AVCaptureVideoPreviewLayer!
+    private let captureSession: AVCaptureSession
+    private let previewLayer: AVCaptureVideoPreviewLayer
+    private let sessionQueue = DispatchQueue(label: "com.itaysoft.CameraController.camera-session")
     private var captureInput: AVCaptureInput?
 
     init(frame frameRect: NSRect, device: AVCaptureDevice?) {
         captureDevice = device
         captureSession = AVCaptureSession()
+        previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
 
         super.init(frame: frameRect)
 
-        setupPreviewLayer(captureSession)
+        wantsLayer = true
+        setupPreviewLayer()
 
-        Task {
-            configureDevice(device)
-            // lock configuration to keep device.activeFormat
-           do {
-               try captureDevice?.lockForConfiguration()
-                captureSession.startRunning()
-               captureDevice?.unlockForConfiguration()
-           } catch {
-                // Handle error.
-           }
-        }
+        configureAndStart(device)
 
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(windowClosed),
@@ -46,8 +39,7 @@ final class CameraPreviewInternal: NSView {
                                                object: nil)
     }
 
-    private func setupPreviewLayer(_ captureSession: AVCaptureSession) {
-        previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
+    private func setupPreviewLayer() {
         previewLayer.frame = CGRect(
             x: 0,
             y: 0,
@@ -57,6 +49,7 @@ final class CameraPreviewInternal: NSView {
         previewLayer.videoGravity = .resizeAspect
     }
 
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -68,30 +61,52 @@ final class CameraPreviewInternal: NSView {
     override func layout() {
         super.layout()
         previewLayer.frame = bounds
-        layer?.addSublayer(previewLayer)
+        if previewLayer.superlayer == nil {
+            layer?.addSublayer(previewLayer)
+        }
     }
 
     func stopRunning() {
-        if captureSession.isRunning {
-            captureSession.stopRunning()
+        sessionQueue.async { [weak self] in
+            guard let self else { return }
+            if self.captureSession.isRunning {
+                self.captureSession.stopRunning()
+            }
         }
     }
 
     func updateCamera(_ cam: AVCaptureDevice?) {
         if captureDevice != cam {
-            captureSession.stopRunning()
+            sessionQueue.async { [weak self] in
+                guard let self else { return }
 
-            Task {
-                configureDevice(cam)
-                // lock configuration to keep device.activeFormat
-                do {
-                    try captureDevice?.lockForConfiguration()
-                    captureSession.startRunning()
-                    captureDevice?.unlockForConfiguration()
-                } catch {
-                    // Handle error.
+                if self.captureSession.isRunning {
+                    self.captureSession.stopRunning()
                 }
+
+                self.configureDevice(cam)
+                self.startRunning()
             }
+        }
+    }
+
+    private func configureAndStart(_ device: AVCaptureDevice?) {
+        sessionQueue.async { [weak self] in
+            guard let self else { return }
+            self.configureDevice(device)
+            self.startRunning()
+        }
+    }
+
+    private func startRunning() {
+        do {
+            try captureDevice?.lockForConfiguration()
+            defer {
+                captureDevice?.unlockForConfiguration()
+            }
+            captureSession.startRunning()
+        } catch {
+            NSLog("Unable to start camera preview session: \(error.localizedDescription)")
         }
     }
 
@@ -127,8 +142,11 @@ final class CameraPreviewInternal: NSView {
 
     @objc
     func windowOpen() {
-        if !captureSession.isRunning {
-            captureSession.startRunning()
+        sessionQueue.async { [weak self] in
+            guard let self else { return }
+            if !self.captureSession.isRunning {
+                self.startRunning()
+            }
         }
     }
 }

@@ -15,7 +15,6 @@ struct PreferencesView: View {
             CameraSection()
             PreviewSection()
             ReadWriteSection()
-            UpdatesSection()
             QuitButton()
         }
         .padding(.top, 2)

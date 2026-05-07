@@ -60,12 +60,15 @@ final class DeviceController: ObservableObject {
         contrast.write()
         saturation.write()
         sharpness.write()
+        hueAuto.write()
+        hue.write()
         whiteBalanceAuto.write()
         whiteBalance.write()
         powerLineFrequency.write()
         backlightCompensation.write()
         zoomAbsolute.write()
         panTiltAbsolute.write()
+        rollAbsolute.write()
         focusAuto.write()
         focusAbsolute.write()
     }
@@ -78,6 +81,8 @@ final class DeviceController: ObservableObject {
                               contrast: self.contrast.sliderValue,
                               saturation: self.saturation.sliderValue,
                               sharpness: self.sharpness.sliderValue,
+                              hueAuto: self.hueAuto.isEnabled,
+                              hue: self.hue.sliderValue,
                               whiteBalanceAuto: self.whiteBalanceAuto.isEnabled,
                               whiteBalance: self.whiteBalance.sliderValue,
                               powerline: self.powerLineFrequency.sliderValue,
@@ -85,6 +90,7 @@ final class DeviceController: ObservableObject {
                               zoom: self.zoomAbsolute.sliderValue,
                               pan: self.panTiltAbsolute.sliderValue1,
                               tilt: self.panTiltAbsolute.sliderValue2,
+                              roll: self.rollAbsolute.sliderValue,
                               focusAuto: self.focusAuto.isEnabled,
                               focus: self.focusAbsolute.sliderValue)
     }
@@ -97,6 +103,12 @@ final class DeviceController: ObservableObject {
         self.contrast.sliderValue = deviceSettings.contrast
         self.saturation.sliderValue = deviceSettings.saturation
         self.sharpness.sliderValue = deviceSettings.sharpness
+        if let hueAuto = deviceSettings.hueAuto {
+            self.hueAuto.isEnabled = hueAuto
+        }
+        if let hue = deviceSettings.hue {
+            self.hue.sliderValue = hue
+        }
         self.whiteBalanceAuto.isEnabled = deviceSettings.whiteBalanceAuto
         self.whiteBalance.sliderValue = deviceSettings.whiteBalance
         self.powerLineFrequency.sliderValue = deviceSettings.powerline
@@ -104,6 +116,9 @@ final class DeviceController: ObservableObject {
         self.zoomAbsolute.sliderValue = deviceSettings.zoom
         self.panTiltAbsolute.sliderValue1 = deviceSettings.pan
         self.panTiltAbsolute.sliderValue2 = deviceSettings.tilt
+        if let roll = deviceSettings.roll {
+            self.rollAbsolute.sliderValue = roll
+        }
         self.focusAuto.isEnabled = deviceSettings.focusAuto
         self.focusAbsolute.sliderValue = deviceSettings.focus
     }
@@ -116,13 +131,15 @@ final class DeviceController: ObservableObject {
         self.contrast.reset()
         self.saturation.reset()
         self.sharpness.reset()
+        self.hueAuto.reset()
+        self.hue.reset()
         self.whiteBalanceAuto.reset()
         self.whiteBalance.reset()
         self.powerLineFrequency.reset()
         self.backlightCompensation.reset()
         self.zoomAbsolute.reset()
         self.panTiltAbsolute.reset()
-        self.panTiltAbsolute.reset()
+        self.rollAbsolute.reset()
         self.focusAuto.reset()
         self.focusAbsolute.reset()
     }
