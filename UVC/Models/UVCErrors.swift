@@ -14,4 +14,5 @@ enum UVCError: Error {
     case cameraNotFound
     case missingUSBInterface
     case missingConfigurationDescriptor
+    case missingUSBConfiguration
 }

@@ -30,16 +30,17 @@ extension UnsafeMutablePointer where Pointee == UnsafeMutablePointer<IOUSBDevice
                                                             return
             }
             defer {
-                let code: kern_return_t = IOObjectRelease(iterator)
-                assert( code == kIOReturnSuccess )
+                if iterator != 0 {
+                    IOObjectRelease(iterator)
+                }
             }
             while true {
                 let object: io_service_t = IOIteratorNext(iterator)
+                guard object != 0 else { break }
+
                 defer {
-                    let code: kern_return_t = IOObjectRelease(object)
-                    assert( code == kIOReturnSuccess )
+                    IOObjectRelease(object)
                 }
-                guard 0 < object else { break }
                 try object.ioCreatePluginInterfaceFor(service: kIOUSBInterfaceUserClientTypeID,
                                                       handle: handle)
             }

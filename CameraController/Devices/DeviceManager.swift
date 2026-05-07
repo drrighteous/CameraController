@@ -27,7 +27,7 @@ final class DevicesManager: ObservableObject {
     }
 
     private init() {
-        let session = AVCaptureDevice.DiscoverySession(deviceTypes: [.externalUnknown, .builtInWideAngleCamera],
+        let session = AVCaptureDevice.DiscoverySession(deviceTypes: Self.cameraDeviceTypes,
                                                                 mediaType: nil,
                                                                 position: .unspecified)
         devices = session.devices.map({ (device) -> CaptureDevice in
@@ -42,6 +42,14 @@ final class DevicesManager: ObservableObject {
 
         if selectedDevice == nil {
             selectedDevice = devices.first
+        }
+    }
+
+    private static var cameraDeviceTypes: [AVCaptureDevice.DeviceType] {
+        if #available(macOS 14.0, *) {
+            return [.external, .builtInWideAngleCamera]
+        } else {
+            return [.externalUnknown, .builtInWideAngleCamera]
         }
     }
 

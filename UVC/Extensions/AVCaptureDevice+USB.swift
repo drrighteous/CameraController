@@ -85,8 +85,7 @@ extension AVCaptureDevice {
 
         let camera = try self.getIOService()
         defer {
-            let code: kern_return_t = IOObjectRelease(camera)
-            assert( code == kIOReturnSuccess )
+            IOObjectRelease(camera)
         }
         var interfaceRef: UnsafeMutablePointer<UnsafeMutablePointer<IOUSBInterfaceInterface190>>?
         var configDesc: IOUSBConfigurationDescriptorPtr?
@@ -104,15 +103,13 @@ extension AVCaptureDevice {
             var returnCode: Int32 = 0
             var numConfig: UInt8 = 0
             returnCode = deviceInterface.pointee.pointee.GetNumberOfConfigurations(deviceInterface, &numConfig)
-            if returnCode != kIOReturnSuccess {
-                print("unable to get number of configurations")
-                return
+            guard returnCode == kIOReturnSuccess, numConfig > 0 else {
+                throw UVCError.missingUSBConfiguration
             }
 
             returnCode = deviceInterface.pointee.pointee.GetConfigurationDescriptorPtr(deviceInterface, 0, &configDesc)
-            if returnCode != kIOReturnSuccess {
-                print("unable to get config description for config 0 (index)")
-                return
+            guard returnCode == kIOReturnSuccess else {
+                throw UVCError.missingConfigurationDescriptor
             }
         }
         guard let interfaceRef else {

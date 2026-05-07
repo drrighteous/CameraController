@@ -14,8 +14,10 @@ extension io_service_t {
         var ref: UnsafeMutablePointer<UnsafeMutablePointer<IOCFPlugInInterface>?>?
         var score: Int32 = 0
         guard IOCreatePlugInInterfaceForService(self, service, kIOCFPlugInInterfaceID,
-                                                &ref, &score) == kIOReturnSuccess, score == 0 else { return }
+                                                &ref, &score) == kIOReturnSuccess else { return }
         defer { _ = ref?.pointee?.pointee.Release(ref) }
+        guard score == 0 else { return }
+
         try ref?.withMemoryRebound(to: UnsafeMutablePointer<IOCFPlugInInterface>.self, capacity: 1, handle)
     }
 }
