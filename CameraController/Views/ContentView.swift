@@ -13,7 +13,7 @@ import AVFoundation
 struct ContentView: View {
     @ObservedObject var manager = DevicesManager.shared
     @ObservedObject var settings = UserSettings.shared
-    @State var currentSection: Int?
+    @State var currentSection: Int? = 0
 
     var body: some View {
         HStack {

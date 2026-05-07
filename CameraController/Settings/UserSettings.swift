@@ -61,9 +61,11 @@ final class UserSettings: ObservableObject {
         readRate = RefreshSettingsRate(rawValue: UserDefaults.standard.double(forKey: "readRate")) ?? .disabled
         writeRate = RefreshSettingsRate(rawValue: UserDefaults.standard.double(forKey: "writeRate")) ?? .disabled
         lastSelectedDevice = UserDefaults.standard.string(forKey: "lastDevice")
-        cameraPreviewSize = PreviewSizeSettings(
-            rawValue: UserDefaults.standard.double(forKey: "cameraPreviewSize")
-        ) ?? .small
+        if let cameraPreviewSizeValue = UserDefaults.standard.object(forKey: "cameraPreviewSize") as? Double {
+            cameraPreviewSize = PreviewSizeSettings(rawValue: cameraPreviewSizeValue) ?? .small
+        } else {
+            cameraPreviewSize = .small
+        }
         mirrorPreview = UserDefaults.standard.bool(forKey: "mirrorPreview")
     }
 }
