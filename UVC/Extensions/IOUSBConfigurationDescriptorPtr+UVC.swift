@@ -35,18 +35,26 @@ extension IOUSBConfigurationDescriptorPtr {
 
         while remaining > 0 {
             var descriptorPointer = InterfaceDescriptorPointer(OpaquePointer(currentPointer))
+            guard let descriptorLength = validDescriptorLength(descriptorPointer, remaining: remaining) else {
+                break
+            }
 
             if descriptorPointer.pointee.bDescriptorType == kUSBInterfaceDesc {
                 let intDesc = UnsafeMutablePointer<IOUSBInterfaceDescriptor>(OpaquePointer(descriptorPointer))
                 if !(intDesc.pointee.bInterfaceClass == UVCConstants.classVideo
                     && intDesc.pointee.bInterfaceSubClass == UVCConstants.subclassVideoControl) {
 
-                    currentPointer = currentPointer.advanced(by: Int(intDesc.pointee.bLength))
+                    remaining -= UInt16(descriptorLength)
+                    currentPointer = currentPointer.advanced(by: descriptorLength)
                     continue
                 }
 
-                currentPointer = currentPointer.advanced(by: Int(intDesc.pointee.bLength))
+                remaining -= UInt16(descriptorLength)
+                currentPointer = currentPointer.advanced(by: descriptorLength)
                 descriptorPointer = InterfaceDescriptorPointer(OpaquePointer(currentPointer))
+                guard let headerLength = validDescriptorLength(descriptorPointer, remaining: remaining) else {
+                    break
+                }
 
                 if descriptorPointer.pointee.bDescriptorType != UVCConstants.descriptorTypeInterface {
                     break
@@ -54,16 +62,22 @@ extension IOUSBConfigurationDescriptorPtr {
 
                 let internalDescriptor = UnsafeMutablePointer<UVC_VCHeaderDescriptor>(OpaquePointer(descriptorPointer))
                 if internalDescriptor.pointee.bDescriptorSubType == UVCConstants.subclassVideoControl {
-                    let littleEndian = Int(internalDescriptor.pointee.wTotalLength).littleEndian
-                    internalDescriptor.pointee.wTotalLength = UInt16(littleEndian)
+                    let totalLength = UInt16(littleEndian: internalDescriptor.pointee.wTotalLength)
+                    guard totalLength >= UInt16(headerLength) else {
+                        break
+                    }
 
-                    remaining -= internalDescriptor.pointee.wTotalLength
-                    currentPointer = currentPointer.advanced(by: Int(internalDescriptor.pointee.bLength))
-                    var remainingMemory = internalDescriptor.pointee.wTotalLength
-                        - UInt16(internalDescriptor.pointee.bLength)
+                    let boundedTotalLength = min(totalLength, remaining)
+                    remaining -= boundedTotalLength
+                    currentPointer = currentPointer.advanced(by: headerLength)
+                    var remainingMemory = boundedTotalLength - UInt16(headerLength)
 
                     while remainingMemory > 0 {
                         descriptorPointer = InterfaceDescriptorPointer(OpaquePointer(currentPointer))
+                        guard let nestedLength = validDescriptorLength(descriptorPointer, remaining: remainingMemory) else {
+                            break
+                        }
+
                         if descriptorPointer.pointee.bDescriptorType != UVCConstants.descriptorTypeInterface {
                             break
                         }
@@ -77,19 +91,29 @@ extension IOUSBConfigurationDescriptorPtr {
                             return
                         }
 
-                        remainingMemory -= UInt16(descriptorPointer.pointee.bLength)
-                        currentPointer = currentPointer.advanced(by: Int(descriptorPointer.pointee.bLength))
+                        remainingMemory -= UInt16(nestedLength)
+                        currentPointer = currentPointer.advanced(by: nestedLength)
                     }
                 } else {
-                    remaining -= UInt16(descriptorPointer.pointee.bLength)
-                    currentPointer = currentPointer.advanced(by: Int(descriptorPointer.pointee.bLength))
+                    remaining -= UInt16(headerLength)
+                    currentPointer = currentPointer.advanced(by: headerLength)
                 }
                 break
             } else {
-                remaining -= UInt16(descriptorPointer.pointee.bLength)
-                currentPointer = currentPointer.advanced(by: Int(descriptorPointer.pointee.bLength))
+                remaining -= UInt16(descriptorLength)
+                currentPointer = currentPointer.advanced(by: descriptorLength)
             }
         }
+    }
+
+    private func validDescriptorLength(_ descriptorPointer: InterfaceDescriptorPointer,
+                                       remaining: UInt16) -> Int? {
+        let descriptorLength = Int(descriptorPointer.pointee.bLength)
+        guard descriptorLength > 0, descriptorLength <= Int(remaining) else {
+            return nil
+        }
+
+        return descriptorLength
     }
 
     private func getDeviceId(_ descriptorPointer: InterfaceDescriptorPointer,
