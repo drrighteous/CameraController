@@ -1,0 +1,49 @@
+name: Build App
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build CameraController
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: |
+          xcodebuild -version
+          xcode-select -p
+
+      - name: Resolve packages
+        run: |
+          xcodebuild \
+            -project CameraController.xcodeproj \
+            -scheme CameraController \
+            -resolvePackageDependencies
+
+      - name: Build release app without signing
+        run: |
+          xcodebuild \
+            -project CameraController.xcodeproj \
+            -scheme CameraController \
+            -configuration Release \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+
+      - name: Package app
+        run: |
+          cd build/Build/Products/Release
+          ditto -c -k --sequesterRsrc --keepParent CameraController.app "$GITHUB_WORKSPACE/CameraController-master-unsigned.zip"
+          shasum -a 256 "$GITHUB_WORKSPACE/CameraController-master-unsigned.zip" > "$GITHUB_WORKSPACE/CameraController-master-unsigned.zip.sha256"
+
+      - name: Upload app artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: CameraController-master-unsigned
+          path: |
+            CameraController-master-unsigned.zip
+            CameraController-master-unsigned.zip.sha256
