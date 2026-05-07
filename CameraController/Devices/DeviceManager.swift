@@ -39,6 +39,10 @@ final class DevicesManager: ObservableObject {
                 device.avDevice?.uniqueID == deviceId
             }
         }
+
+        if selectedDevice == nil {
+            selectedDevice = devices.first
+        }
     }
 
     func startMonitoring() {
@@ -71,7 +75,11 @@ final class DevicesManager: ObservableObject {
             return
         }
 
-        devices.append(CaptureDevice(avDevice: device))
+        let captureDevice = CaptureDevice(avDevice: device)
+        devices.append(captureDevice)
+        if selectedDevice == nil {
+            selectedDevice = captureDevice
+        }
         NotificationCenter.default.post(name: .devicesUpdated, object: nil)
     }
 
