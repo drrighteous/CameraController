@@ -1,8 +1,8 @@
-# CameraController Fork Security Audit Notes
+# ArtificeLens Security Audit Notes
 
 Branch: `dev`
 
-This fork is intended for local, controlled builds of CameraController. The first hardening pass focused on reducing implicit trust, removing unattended network/update behavior, and improving USB/camera lifecycle safety.
+ArtificeLens is intended for local, controlled builds while the app identity, UI, UVC control coverage, signing, and release process are rebuilt. The first hardening pass focused on reducing implicit trust, removing unattended network/update behavior, and improving USB/camera lifecycle safety.
 
 ## Changes Made
 
@@ -19,14 +19,16 @@ This fork is intended for local, controlled builds of CameraController. The firs
 - Prevented duplicate camera entries on repeated device connect notifications.
 - Added Hue and Roll to profile save/restore while keeping older saved profiles decodable.
 - Updated the login helper to use the modern `NSWorkspace` open API and exit after launch.
+- Kept normal UI control exposure limited to standard UVC camera-terminal and processing-unit controls. Firmware/AIT, EEPROM/test-debug, and unvalidated LED/PTZ vendor extension selectors are intentionally not surfaced.
+- Added local-only still capture, timed capture, and diagnostics export. These flows write only to user-selected files/folders through macOS panels and do not add network or updater surfaces.
 
 ## Security Posture
 
-The fork should not make update-network calls by default. It should not run bundled shell scripts or privileged install/move flows. The app remains sandboxed with camera and USB entitlements because UVC camera control requires those capabilities.
+The app should not make update-network calls by default. It should not run bundled shell scripts or privileged install/move flows. The app remains sandboxed with camera and USB entitlements because UVC camera control requires those capabilities.
 
 ## Remaining Review Items
 
 - Build, sign, and notarization should be handled by a trusted release process before broad distribution.
 - The login item still uses the legacy helper target because the app supports macOS 12. A future macOS 13+ only fork could migrate to `SMAppService`.
-- The app still uses the upstream bundle identifier. Changing it would isolate TCC permissions but would require new helper identifiers and user permission prompts.
+- The app now uses the fork-specific bundle identifier `com.drrighteous.ArtificeLens`; macOS will treat it as a new app for TCC/camera permissions.
 - UVC control operations still depend on low-level IOKit APIs. Continue testing with the target Logitech BRIO hardware after each USB-layer change.

@@ -21,8 +21,8 @@ jobs:
     - name: Test
       run: |
         xcodebuild \
-          -project CameraController.xcodeproj \
-          -scheme CameraController \
+          -project ArtificeLens.xcodeproj \
+          -scheme ArtificeLens \
           -sdk macosx \
           CODE_SIGNING_ALLOWED=NO \
           test

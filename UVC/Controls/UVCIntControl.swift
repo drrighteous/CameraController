@@ -1,9 +1,7 @@
 //
 //  UVCIntControl.swift
-//  CameraController
+//  ArtificeLens
 //
-//  Created by Itay Brenner on 7/20/20.
-//  Copyright © 2020 Itaysoft. All rights reserved.
 //
 
 import Foundation
@@ -19,8 +17,9 @@ public final class UVCIntControl: UVCControl {
             return _current
         }
         set {
-            if setData(value: newValue, length: uvcSize) {
-                _current = newValue
+            let clampedValue = clamped(newValue)
+            if setData(value: clampedValue, length: uvcSize) {
+                _current = clampedValue
             }
         }
     }
@@ -28,8 +27,9 @@ public final class UVCIntControl: UVCControl {
     private var _current: Int = 0
 
     override init(_ interface: USBInterfacePointer, _ uvcSize: Int,
-                  _ uvcSelector: Selector, _ uvcUnit: Int, _ uvcInterface: Int) {
-        super.init(interface, uvcSize, uvcSelector, uvcUnit, uvcInterface)
+                  _ uvcSelector: Selector, _ uvcUnit: Int, _ uvcInterface: Int,
+                  metadata: UVCControlMetadata? = nil) {
+        super.init(interface, uvcSize, uvcSelector, uvcUnit, uvcInterface, metadata: metadata)
         configure()
     }
 
@@ -69,5 +69,33 @@ public final class UVCIntControl: UVCControl {
 
     func updateResolution() {
         resolution = getDataFor(type: .getRessolution, length: uvcSize)
+    }
+
+    public override func diagnosticReport() -> UVCControlDiagnostic {
+        UVCControlDiagnostic(key: metadata.key,
+                             name: metadata.name,
+                             unit: metadata.unit.rawValue,
+                             selector: metadata.selector,
+                             size: metadata.size,
+                             signed: metadata.isSigned,
+                             relative: metadata.isRelative,
+                             supported: isCapable,
+                             canGet: capabilities.canGet,
+                             canSet: capabilities.canSet,
+                             rawInfo: capabilities.rawValue,
+                             lastError: lastErrorDescription,
+                             current: _current,
+                             minimum: metadata.hasMinimum ? minimum : nil,
+                             maximum: metadata.hasMaximum ? maximum : nil,
+                             defaultValue: metadata.hasDefault ? defaultValue : nil,
+                             resolution: metadata.hasResolution ? resolution : nil)
+    }
+
+    private func clamped(_ value: Int) -> Int {
+        guard isCapable, minimum <= maximum else {
+            return value
+        }
+
+        return min(max(value, minimum), maximum)
     }
 }

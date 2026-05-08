@@ -1,9 +1,7 @@
 //
 //  UVCMultipleIntControl.swift
-//  CameraController
+//  ArtificeLens
 //
-//  Created by Itay Brenner on 7/20/20.
-//  Copyright © 2020 Itaysoft. All rights reserved.
 //
 
 import Foundation
@@ -23,8 +21,9 @@ public final class UVCMultipleIntControl: UVCControl {
             return _current1
         }
         set {
-            if set1(newValue) {
-                _current1 = newValue
+            let clampedValue = min(max(newValue, minimum1), maximum1)
+            if set1(clampedValue) {
+                _current1 = clampedValue
             }
         }
     }
@@ -34,8 +33,9 @@ public final class UVCMultipleIntControl: UVCControl {
             return _current2
         }
         set {
-            if set2(newValue) {
-                _current2 = newValue
+            let clampedValue = min(max(newValue, minimum2), maximum2)
+            if set2(clampedValue) {
+                _current2 = clampedValue
             }
         }
     }
@@ -44,19 +44,18 @@ public final class UVCMultipleIntControl: UVCControl {
     private var _current2: Int = 0
 
     override init(_ interface: USBInterfacePointer, _ uvcSize: Int,
-                  _ uvcSelector: Selector, _ uvcUnit: Int, _ uvcInterface: Int) {
-        super.init(interface, uvcSize, uvcSelector, uvcUnit, uvcInterface)
+                  _ uvcSelector: Selector, _ uvcUnit: Int, _ uvcInterface: Int,
+                  metadata: UVCControlMetadata? = nil) {
+        super.init(interface, uvcSize, uvcSelector, uvcUnit, uvcInterface, metadata: metadata)
         configure()
     }
 
     private func set1(_ val1: Int) -> Bool {
-        let newValue = (val1*3600) << 32 + (_current2*3600)
-        return setData(value: newValue, length: uvcSize)
+        return setData(value: combinedValue(val1, _current2), length: uvcSize)
     }
 
     private func set2(_ val2: Int) -> Bool {
-        let newValue = (_current1*3600) << 32 + (val2*3600)
-        return setData(value: newValue, length: uvcSize)
+        return setData(value: combinedValue(_current1, val2), length: uvcSize)
     }
 
     private func configure() {
@@ -72,24 +71,17 @@ public final class UVCMultipleIntControl: UVCControl {
     }
 
     func splitValue(_ value: Int) -> (Int, Int) {
-        let array: [UInt8] = self.toByteArray(value: value)
-
-        let array1: [UInt8] = Array(array.prefix(4))
-        let array2: [UInt8] = array.suffix(4)
-
-        let value1 = Int(Int32(array1).littleEndian)/3600
-        let value2 = Int(Int32(array2).littleEndian)/3600
+        let rawValue = UInt64(bitPattern: Int64(value))
+        let value1 = Int(Int32(bitPattern: UInt32(rawValue & 0xFFFF_FFFF))) / 3600
+        let value2 = Int(Int32(bitPattern: UInt32((rawValue >> 32) & 0xFFFF_FFFF))) / 3600
 
         return (value1, value2)
     }
 
-    func toByteArray( value: Int) -> [UInt8] {
-        var msgLength = [UInt8](repeating: 0, count: 8)
-
-        for index in 0...7 {
-            msgLength[index] = UInt8(0x0000FF & value >> Int((7 - index) * 8))
-        }
-        return msgLength
+    private func combinedValue(_ val1: Int, _ val2: Int) -> Int {
+        let value1 = UInt64(UInt32(bitPattern: Int32(val1 * 3600)))
+        let value2 = UInt64(UInt32(bitPattern: Int32(val2 * 3600))) << 32
+        return Int(Int64(bitPattern: value1 | value2))
     }
 
     func updateCurrent() {
@@ -126,19 +118,24 @@ public final class UVCMultipleIntControl: UVCControl {
         resolution1 = splitted.0
         resolution2 = splitted.1
     }
-}
 
-public extension SignedInteger {
-    init(_ bytes: [UInt8]) {
-        precondition(bytes.count <= MemoryLayout<Self>.size)
-
-        var value: Int32 = 0
-
-        for byte in bytes {
-            value <<= 8
-            value |= Int32(byte)
-        }
-
-        self.init(value)
+    public override func diagnosticReport() -> UVCControlDiagnostic {
+        UVCControlDiagnostic(key: metadata.key,
+                             name: metadata.name,
+                             unit: metadata.unit.rawValue,
+                             selector: metadata.selector,
+                             size: metadata.size,
+                             signed: metadata.isSigned,
+                             relative: metadata.isRelative,
+                             supported: isCapable,
+                             canGet: capabilities.canGet,
+                             canSet: capabilities.canSet,
+                             rawInfo: capabilities.rawValue,
+                             lastError: lastErrorDescription,
+                             current: combinedValue(_current1, _current2),
+                             minimum: metadata.hasMinimum ? combinedValue(minimum1, minimum2) : nil,
+                             maximum: metadata.hasMaximum ? combinedValue(maximum1, maximum2) : nil,
+                             defaultValue: metadata.hasDefault ? combinedValue(defaultValue1, defaultValue2) : nil,
+                             resolution: metadata.hasResolution ? combinedValue(resolution1, resolution2) : nil)
     }
 }

@@ -1,30 +1,8 @@
-<h1 align="center"> CameraController </h1>
+<h1 align="center"> ArtificeLens </h1>
 
 <!-- subtext -->
 <div align="center">
-Control your cameras settings without using the software provided (or not) by the company.
-</div>
-
-<br/>
-
-<!-- shields -->
-<div align="center">
-    <!-- downloads -->
-    <a href="https://github.com/itaybre/CameraController/releases">
-        <img src="https://img.shields.io/github/downloads/itaybre/CameraController/total" alt="downloads"/>
-    </a>
-    <!-- version -->
-    <a href="https://github.com/itaybre/CameraController/releases/latest">
-        <img src="https://img.shields.io/github/release/itaybre/CameraController.svg" alt="latest version"/>
-    </a>
-    <!-- license -->
-    <a href="https://github.com/itaybre/CameraController/blob/master/License.txt">
-        <img src="https://img.shields.io/github/license/itaybre/CameraController.svg" alt="license"/>
-    </a>
-    <!-- platform -->
-    <a href="https://github.com/itaybre/CameraController">
-        <img src="https://img.shields.io/badge/platform-macOS-lightgrey.svg" alt="platform"/>
-    </a>
+Advanced local camera control for macOS, focused on Logitech MX Brio-class UVC cameras.
 </div>
 
 <br/>
@@ -34,52 +12,54 @@ Control your cameras settings without using the software provided (or not) by th
     <img src="./.github/Preferences.png" width="299" alt="preferences screenshot"/>
 </div>
 
+## Status
+
+ArtificeLens is a local/dev focused macOS UVC camera-control app while the UI, control coverage, signing, and release process are rebuilt.
+
 ## Installation
 
-### Manually
+No public release channel is active yet. Build artifacts are produced from GitHub Actions and installed locally after checksum verification and local signing.
 
-Download the latest `.zip` from [Releases](https://github.com/itaybre/CameraController/releases/latest).
+No Homebrew cask is used for ArtificeLens yet.
 
-### Homebrew
+## Direction
 
-```
-brew install --cask cameracontroller
-```
+- Logi Tune-style sliders with visible min/current/max values and help tooltips.
+- Standard UVC Auto Exposure Priority plus full UVC exposure mode controls.
+- Standard Gamma and Iris controls when exposed by the camera.
+- Live-preview zoom overlay with pinch zoom, reset, and drag-to-pan/tilt when zoomed in.
+- Local-only still capture, timed image capture, and JSON camera diagnostics export.
+- Broader MX Brio UVC coverage while avoiding unsafe vendor-extension writes.
+- Foreground-first behavior without bundled auto-updaters or privileged helper flows.
 
-## ToDo
+## Credit
 
-- Apply latest settings on startup
-- Add more Unit Tests
-- Support for some vendor specific capabilities (like Logitech LED control)
-
-## How to help
-
-Open [issues](https://github.com/itaybre/CameraController/issues) if you have a question, an enhancement to suggest or a bug you've found. If you want you can fork the code yourself and submit a pull request to improve the app.
+ArtificeLens began from the open-source [CameraController](https://github.com/itaybre/CameraController) project by [Itay Brenner](https://github.com/itaybre). This rewrite keeps credit for that useful UVC foundation while moving the app identity, security posture, and feature direction to ArtificeLens.
 
 ## How to build
 
 ### Required
 
 - Xcode
-- [Swiftlint](https://github.com/realm/SwiftLint)
+- [SwiftLint](https://github.com/realm/SwiftLint)
 
 Clone the project
 ```sh
-$ git clone https://github.com/itaybre/CameraController.git
+$ git clone git@github.com:drrighteous/ArtificeLens.git
+$ cd ArtificeLens
 ```
 
-You're all set ! Now open the `CameraController.xcodeproj` with Xcode
+Open `ArtificeLens.xcodeproj` with Xcode.
 
 ## FAQ
 
-- Does it work with Apple's Facetime Camera?
+- Does it work with Apple's FaceTime Camera?
 
-In old machines it will work, but new machines (wth T1 and T2 chip) require a special entitlement only available to Apple.
+On older machines it may work, but newer Apple cameras can require private Apple entitlements. ArtificeLens is mainly being developed for external UVC cameras.
 
 ## Support
-- macOS Catalina (`10.15`) and up.
+- macOS Monterey (`12.0`) and up.
 - Works with cameras controllable via [UVC](https://www.usb.org/document-library/video-class-v15-document-set).
 
 ## Contributors
-- [@itaybre](https://github.com/itaybre)
 - Icons by [@herrerajeff](https://github.com/herrerajeff)

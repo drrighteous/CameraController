@@ -90,3 +90,12 @@ fastlane/test_output
 iOSInjectionProject/
 
 .DS_Store
+
+# Dexter local project archive.
+# Keep forensic captures, chat exports, and local-only audit notes out of the
+# public ArtificeLens repository unless they are intentionally force-added.
+/bin/
+/chats/
+/evidence/
+/reports/
+/tools/

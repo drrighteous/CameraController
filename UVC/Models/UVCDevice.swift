@@ -1,9 +1,7 @@
 //
 //  UCDevice.swift
-//  CameraController
+//  ArtificeLens
 //
-//  Created by Itay Brenner on 7/19/20.
-//  Copyright © 2020 Itaysoft. All rights reserved.
 //
 
 import Foundation
@@ -13,8 +11,8 @@ typealias USBInterfacePointer = UnsafeMutablePointer<UnsafeMutablePointer<IOUSBI
 
 public final class UVCDevice {
     let interface: USBInterfacePointer
-    let processingUnitID: Int
-    let cameraTerminalID: Int
+    public let processingUnitID: Int
+    public let cameraTerminalID: Int
     public let properties: UVCDeviceProperties
 
     public init(device: AVCaptureDevice) throws {

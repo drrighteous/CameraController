@@ -1,9 +1,7 @@
 //
 //  USBHeaders.h
-//  CameraController
+//  ArtificeLens
 //
-//  Created by Itay Brenner on 7/20/20.
-//  Copyright © 2020 Itaysoft. All rights reserved.
 //
 
 #include <stdint.h>

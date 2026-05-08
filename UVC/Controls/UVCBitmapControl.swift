@@ -1,19 +1,47 @@
 //
 //  UVCBitmapControl.swift
-//  CameraController
+//  ArtificeLens
 //
-//  Created by Itay Brenner on 7/21/20.
-//  Copyright © 2020 Itaysoft. All rights reserved.
 //
 
 import Foundation
 
 public final class UVCBitmapControl: UVCControl {
-    public enum BitmapValue: Int {
+    public enum BitmapValue: Int, CaseIterable, Identifiable {
         case manual = 1
         case auto = 2
         case shutterPriority = 4
         case aperturePriority = 8
+
+        public var id: Int {
+            rawValue
+        }
+
+        public var title: String {
+            switch self {
+            case .manual:
+                return "Manual"
+            case .auto:
+                return "Auto"
+            case .shutterPriority:
+                return "Shutter"
+            case .aperturePriority:
+                return "Iris"
+            }
+        }
+
+        public var helpText: String {
+            switch self {
+            case .manual:
+                return "Manual exposure and manual iris."
+            case .auto:
+                return "Camera controls exposure and iris automatically."
+            case .shutterPriority:
+                return "Manual exposure time with automatic iris."
+            case .aperturePriority:
+                return "Automatic exposure with manual iris."
+            }
+        }
     }
 
     public var defaultValue: BitmapValue = .manual
@@ -32,8 +60,9 @@ public final class UVCBitmapControl: UVCControl {
     var internalCurrent: BitmapValue = .manual
 
     override init(_ interface: USBInterfacePointer, _ uvcSize: Int,
-                  _ uvcSelector: Selector, _ uvcUnit: Int, _ uvcInterface: Int) {
-        super.init(interface, uvcSize, uvcSelector, uvcUnit, uvcInterface)
+                  _ uvcSelector: Selector, _ uvcUnit: Int, _ uvcInterface: Int,
+                  metadata: UVCControlMetadata? = nil) {
+        super.init(interface, uvcSize, uvcSelector, uvcUnit, uvcInterface, metadata: metadata)
         configure()
     }
 
@@ -64,5 +93,25 @@ public final class UVCBitmapControl: UVCControl {
         } else {
             isCapable = false
         }
+    }
+
+    public override func diagnosticReport() -> UVCControlDiagnostic {
+        UVCControlDiagnostic(key: metadata.key,
+                             name: metadata.name,
+                             unit: metadata.unit.rawValue,
+                             selector: metadata.selector,
+                             size: metadata.size,
+                             signed: metadata.isSigned,
+                             relative: metadata.isRelative,
+                             supported: isCapable,
+                             canGet: capabilities.canGet,
+                             canSet: capabilities.canSet,
+                             rawInfo: capabilities.rawValue,
+                             lastError: lastErrorDescription,
+                             current: internalCurrent.rawValue,
+                             minimum: nil,
+                             maximum: nil,
+                             defaultValue: metadata.hasDefault ? defaultValue.rawValue : nil,
+                             resolution: nil)
     }
 }

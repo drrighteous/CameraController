@@ -5,7 +5,7 @@ on:
 
 jobs:
   build:
-    name: Build CameraController
+    name: Build ArtificeLens
     runs-on: macos-latest
 
     steps:
@@ -20,15 +20,15 @@ jobs:
       - name: Resolve packages
         run: |
           xcodebuild \
-            -project CameraController.xcodeproj \
-            -scheme CameraController \
+            -project ArtificeLens.xcodeproj \
+            -scheme ArtificeLens \
             -resolvePackageDependencies
 
       - name: Build release app without signing
         run: |
           xcodebuild \
-            -project CameraController.xcodeproj \
-            -scheme CameraController \
+            -project ArtificeLens.xcodeproj \
+            -scheme ArtificeLens \
             -configuration Release \
             -derivedDataPath build \
             CODE_SIGNING_ALLOWED=NO \
@@ -37,13 +37,13 @@ jobs:
       - name: Package app
         run: |
           cd build/Build/Products/Release
-          ditto -c -k --sequesterRsrc --keepParent CameraController.app "$GITHUB_WORKSPACE/CameraController-${GITHUB_REF_NAME}-unsigned.zip"
-          shasum -a 256 "$GITHUB_WORKSPACE/CameraController-${GITHUB_REF_NAME}-unsigned.zip" > "$GITHUB_WORKSPACE/CameraController-${GITHUB_REF_NAME}-unsigned.zip.sha256"
+          ditto -c -k --sequesterRsrc --keepParent ArtificeLens.app "$GITHUB_WORKSPACE/ArtificeLens-${GITHUB_REF_NAME}-unsigned.zip"
+          shasum -a 256 "$GITHUB_WORKSPACE/ArtificeLens-${GITHUB_REF_NAME}-unsigned.zip" > "$GITHUB_WORKSPACE/ArtificeLens-${GITHUB_REF_NAME}-unsigned.zip.sha256"
 
       - name: Upload app artifact
         uses: actions/upload-artifact@v4
         with:
-          name: CameraController-${{ github.ref_name }}-unsigned
+          name: ArtificeLens-${{ github.ref_name }}-unsigned
           path: |
-            CameraController-${{ github.ref_name }}-unsigned.zip
-            CameraController-${{ github.ref_name }}-unsigned.zip.sha256
+            ArtificeLens-${{ github.ref_name }}-unsigned.zip
+            ArtificeLens-${{ github.ref_name }}-unsigned.zip.sha256

@@ -1,9 +1,7 @@
 //
 //  UVCBoolControl.swift
-//  CameraController
+//  ArtificeLens
 //
-//  Created by Itay Brenner on 7/21/20.
-//  Copyright © 2020 Itaysoft. All rights reserved.
 //
 
 import Foundation
@@ -26,8 +24,9 @@ public final class UVCBoolControl: UVCControl {
     private var _isEnabled = false
 
     override init(_ interface: USBInterfacePointer, _ uvcSize: Int,
-                  _ uvcSelector: Selector, _ uvcUnit: Int, _ uvcInterface: Int) {
-        super.init(interface, uvcSize, uvcSelector, uvcUnit, uvcInterface)
+                  _ uvcSelector: Selector, _ uvcUnit: Int, _ uvcInterface: Int,
+                  metadata: UVCControlMetadata? = nil) {
+        super.init(interface, uvcSize, uvcSelector, uvcUnit, uvcInterface, metadata: metadata)
         configure()
     }
 
@@ -45,6 +44,31 @@ public final class UVCBoolControl: UVCControl {
     }
 
     func updateDefault() {
+        guard metadata.hasDefault else {
+            defaultValue = false
+            return
+        }
+
         defaultValue = getDataFor(type: .getDefault, length: uvcSize) != 0
+    }
+
+    public override func diagnosticReport() -> UVCControlDiagnostic {
+        UVCControlDiagnostic(key: metadata.key,
+                             name: metadata.name,
+                             unit: metadata.unit.rawValue,
+                             selector: metadata.selector,
+                             size: metadata.size,
+                             signed: metadata.isSigned,
+                             relative: metadata.isRelative,
+                             supported: isCapable,
+                             canGet: capabilities.canGet,
+                             canSet: capabilities.canSet,
+                             rawInfo: capabilities.rawValue,
+                             lastError: lastErrorDescription,
+                             current: _isEnabled ? 1 : 0,
+                             minimum: nil,
+                             maximum: nil,
+                             defaultValue: metadata.hasDefault ? (defaultValue ? 1 : 0) : nil,
+                             resolution: nil)
     }
 }

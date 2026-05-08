@@ -2,15 +2,13 @@
 //  AppDelegate.swift
 //  Helper
 //
-//  Created by Itay Brenner on 7/25/20.
-//  Copyright © 2020 Itaysoft. All rights reserved.
 //
 
 import Cocoa
 import SwiftUI
 
 enum HelperConstants {
-    static let bundleIdentifier = "com.itaysoft.CameraController"
+    static let bundleIdentifier = "com.drrighteous.ArtificeLens"
 }
 
 @NSApplicationMain
@@ -37,7 +35,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             configuration: configuration
         ) { _, error in
             if let error {
-                NSLog("Unable to open CameraController from login helper: \(error.localizedDescription)")
+                NSLog("Unable to open ArtificeLens from login helper: \(error.localizedDescription)")
             }
             NSApp.terminate(nil)
         }

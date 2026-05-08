@@ -1,0 +1,49 @@
+//
+//  ReadWriteSection.swift
+//  ArtificeLens
+//
+//
+
+import SwiftUI
+
+struct ReadWriteSection: View {
+    @ObservedObject var settings = UserSettings.shared
+
+    var body: some View {
+        SectionView {
+            SectionTitle(title: "Read / Write settings from device",
+                         image: Image(systemName: "arrow.left.arrow.right"))
+
+            HStack(spacing: 20.0) {
+                Text("Read")
+                    .help("ArtificeLens will read the configuration from the camera every X amount of time.")
+                Spacer()
+                Picker(selection: $settings.readRate, label: Text("")) {
+                    Text("Disabled").tag(RefreshSettingsRate.disabled)
+                    Text("Every 0.5 Seconds").tag(RefreshSettingsRate.halfSecond)
+                    Text("Every 1 Second").tag(RefreshSettingsRate.oneSecond)
+                    Text("Every 2 Second").tag(RefreshSettingsRate.twoSeconds)
+                }.frame(width: 200)
+            }
+            HStack(spacing: 20.0) {
+                Text("Write")
+                    .help("ArtificeLens will write the configuration to the camera every X amount of time.")
+                Spacer()
+                Picker(selection: $settings.writeRate, label: Text("")) {
+                    Text("Disabled").tag(RefreshSettingsRate.disabled)
+                    Text("Every 0.5 Seconds").tag(RefreshSettingsRate.halfSecond)
+                    Text("Every 1 Second").tag(RefreshSettingsRate.oneSecond)
+                    Text("Every 2 Second").tag(RefreshSettingsRate.twoSeconds)
+                }.frame(width: 200)
+            }
+        }
+    }
+}
+
+#if DEBUG
+struct ReadWriteSection_Previews: PreviewProvider {
+    static var previews: some View {
+        ReadWriteSection()
+    }
+}
+#endif
